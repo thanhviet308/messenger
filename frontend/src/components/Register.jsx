@@ -1,7 +1,52 @@
-import React from 'react'
+import React, { use, useState } from 'react'
 import { Link } from 'react-router-dom'
-
+import { useDispatch } from 'react-redux'
+import { userRegister } from '../store/actions/authAction';
 const Register = () => {
+
+    const dispatch = useDispatch();
+
+    const [state, setstate] = useState({
+        userName: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        image: ''
+    })
+
+    const [loadImage, setloadImage] = useState();
+
+    const inputHendle = (e) => {
+        setstate({
+            ...state,
+            [e.target.name]: e.target.value
+        })
+    }
+    const fileHandle = (e) => {
+        if (e.target.files.length !== 0) {
+            setstate({
+                ...state,
+                [e.target.name]: e.target.files[0]
+            })
+        }
+        const reader = new FileReader();
+        reader.onload = () => {
+            setloadImage(reader.result)
+        }
+        reader.readAsDataURL(e.target.files[0]);
+    }
+    const register = (e) => {
+        const { userName, email, password, confirmPassword, image } = state;
+        e.preventDefault();
+        const formData = new FormData();
+        formData.append('userName', state.userName);
+        formData.append('email', state.email);
+        formData.append('password', state.password);
+        formData.append('confirmPassword', state.confirmPassword);
+        formData.append('image', state.image);
+        dispatch(userRegister(formData));
+        console.log(state);
+    }
     return (
         <div className='register'>
             <div className='card'>
@@ -9,30 +54,36 @@ const Register = () => {
                     <h3>Register</h3>
                 </div>
                 <div className='card-body'>
-                    <form>
+                    <form onSubmit={register}>
                         <div className='form-group'>
                             <label htmlFor='username'>User Name</label>
-                            <input type='text' className='form-control' placeholder='User Name' id='username'></input>
+                            <input type='text' onChange={inputHendle} name='userName'
+                                value={state.userName} className='form-control' placeholder='User Name' id='username'></input>
                         </div>
                         <div className='form-group'>
                             <label htmlFor='email'>Email</label>
-                            <input type='Email' className='form-control' placeholder='Email' id='email'></input>
+                            <input type='Email' onChange={inputHendle} name='email'
+                                value={state.email} className='form-control' placeholder='Email' id='email'></input>
                         </div>
                         <div className='form-group'>
                             <label htmlFor='password'>Password</label>
-                            <input type='password' className='form-control' placeholder='Password' id='password'></input>
+                            <input type='password' onChange={inputHendle} name='password'
+                                value={state.password} className='form-control' placeholder='Password' id='password'></input>
                         </div>
                         <div className='form-group'>
-                            <label htmlFor='confirmpassword'>Confirm Password</label>
-                            <input type='password' className='form-control' placeholder='Confirm Password' id='Confirm Password'></input>
+                            <label htmlFor='confirmPassword'>Confirm Password</label>
+                            <input type='password' onChange={inputHendle} name='confirmPassword'
+                                value={state.confirmPassword} className='form-control' placeholder='Confirm Password' id='Confirm Password'></input>
                         </div>
                         <div className='form-group'>
                             <div className='file-image'>
                                 <div className='image'>
+                                    {loadImage ? <img src={loadImage} /> : ''}
                                 </div>
                                 <div className='file'>
                                     <label htmlFor='image'>Select Image</label>
-                                    <input type='file' className='form-control' id='image'></input>
+                                    <input type='file' onChange={fileHandle} name='image'
+                                        className='form-control' id='image'></input>
                                 </div>
                             </div>
                         </div>
