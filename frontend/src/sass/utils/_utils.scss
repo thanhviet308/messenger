@@ -3,6 +3,7 @@
     padding: 15px 20px;
     background-color: #1c3f8fd4;
     box-shadow: 0px 8px 25px #f5f0f0;
+    font-family: "Helvetica", "Arial", sans-serif;
 }
 
 .form-group {
@@ -16,9 +17,12 @@
     border: none;
     outline: none;
     background-color: #0a0e1585;
+    font-family: "Helvetica", "Arial", sans-serif;
+    font-size: 16px;
+    color: #fff;
 
     &::placeholder {
-        color: #fff;
+        color: #ddd;
         font-weight: 400;
     }
 }
@@ -27,6 +31,7 @@ label {
     margin-bottom: 5px;
     color: #fff;
     font-weight: 500;
+    font-family: "Helvetica", "Arial", sans-serif;
 }
 
 .btn {
@@ -35,7 +40,16 @@ label {
     text-transform: uppercase;
     padding: 12px;
     text-align: center;
-    background-color: #101a23eb;
+    background-color: #1877F2;
     border: none;
     cursor: pointer;
+    font-family: "Helvetica", "Arial", sans-serif;
+    font-weight: bold;
+    font-size: 14px;
+    border-radius: 5px;
+}
+
+.btn:hover {
+    background-color: #166FE5;
+    /* Hiệu ứng hover */
 }
