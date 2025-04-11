@@ -6,9 +6,22 @@ import reportWebVitals from './reportWebVitals';
 import './main.scss'
 import { Provider } from 'react-redux';
 import store from './store/index.js';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <Provider store={store}>
+    <ToastContainer
+      position="top-center"
+      autoClose={3000}
+      hideProgressBar={false}
+      newestOnTop={false}
+      closeOnClick
+      pauseOnHover
+      draggable
+      theme="light"
+    />
     <App />
   </Provider>
 );

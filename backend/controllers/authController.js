@@ -14,28 +14,28 @@ module.exports.userRegister = (req, res) => {
         const { image } = files;
         const error = [];
         if (!userName) {
-            error.push('Please provide your user name');
+            error.push('Vui lòng nhập tên người dùng.');
         }
         if (!email) {
-            error.push('Please provide your Email');
+            error.push('Vui lòng nhập địa chỉ Email.');
         }
         if (email && !validator.isEmail(email)) {
-            error.push('Please provide your Valid Email');
+            error.push('Vui lòng nhập địa chỉ Email hợp lệ.');
         }
         if (!password) {
-            error.push('Please provide your Password');
+            error.push('Vui lòng nhập mật khẩu.');
         }
         if (!confirmPassword) {
-            error.push('Please provide your confirm Password');
+            error.push('Vui lòng xác nhận mật khẩu.');
         }
         if (password && confirmPassword && password !== confirmPassword) {
-            error.push('Your Password and Confirm Password not same');
+            error.push('Mật khẩu và xác nhận mật khẩu không khớp.');
         }
         if (password && password.length < 6) {
-            error.push('Please provide password mush be 6 charecter');
+            error.push('Mật khẩu phải có ít nhất 6 ký tự.');
         }
         if (Object.keys(files).length === 0) {
-            error.push('Please provide user image');
+            error.push('Vui lòng chọn ảnh đại diện.');
         }
         if (error.length > 0) {
             res.status(400).json({
@@ -56,7 +56,7 @@ module.exports.userRegister = (req, res) => {
                 if (checkUser) {
                     res.status(404).json({
                         error: {
-                            errorMessage: ['Your email already exited']
+                            errorMessage: ['Email này đã được sử dụng.']
                         }
                     })
                 } else {
@@ -81,7 +81,7 @@ module.exports.userRegister = (req, res) => {
                                 expires: new Date(Date.now() + process.env.COOKIE_EXP * 24 * 60 * 60 * 1000)
                             }
                             res.status(201).cookie('authToken', token, options).json({
-                                successMessage: ['Your register successfully'], token
+                                successMessage: 'Bạn đã đăng ký thành công!', token
                             })
                         } else {
                             console.error(error);

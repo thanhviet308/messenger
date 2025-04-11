@@ -4,7 +4,6 @@ const app = express();
 const databaseConnect = require('./config/database');
 const authRouter = require('./routes/authRoute');
 
-
 const PORT = process.env.PORT || 5000;
 
 app.get('/', (req, res) => {
