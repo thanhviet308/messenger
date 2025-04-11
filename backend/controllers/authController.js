@@ -4,6 +4,7 @@ const registerModel = require('../models/authModel');
 const fs = require('fs');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { match } = require('assert');
 
 module.exports.userRegister = (req, res) => {
     const form = new formidable.IncomingForm();
@@ -103,4 +104,69 @@ module.exports.userRegister = (req, res) => {
             }
         }
     })
+}
+
+module.exports.userLogin = async (req, res) => {
+    const error = [];
+    const { email, password } = req.body;
+    if (!email) {
+        error.push('Vui lòng nhập địa chỉ Email.');
+    }
+    if (!password) {
+        error.push('Vui lòng nhập mật khẩu.');
+    }
+    if (email && !validator.isEmail(email)) {
+        error.push('Vui lòng nhập địa chỉ Email hợp lệ.');
+    }
+    if (error.length > 0) {
+        res.status(400).json({
+            error: {
+                errorMessage: error
+            }
+        })
+    } else {
+        try {
+            const checkUser = await registerModel.findOne({
+                email: email
+            }).select('+password');
+            if (checkUser) {
+                const matchPassword = await bcrypt.compare(password, checkUser.password);
+                if (matchPassword) {
+                    const token = jwt.sign({
+                        id: checkUser._id,
+                        userName: checkUser.userName,
+                        email: checkUser.email,
+                        image: checkUser.image,
+                        registerTime: checkUser.createdAt
+                    }, process.env.SECRET, {
+                        expiresIn: process.env.TOKEN_EXP
+                    });
+                    const options = {
+                        expires: new Date(Date.now() + process.env.COOKIE_EXP * 24 * 60 * 60 * 1000)
+                    }
+                    res.status(200).cookie('authToken', token, options).json({
+                        successMessage: 'Bạn đã đăng nhập thành công!', token
+                    })
+                } else {
+                    res.status(400).json({
+                        error: {
+                            errorMessage: ['Mật khẩu không đúng.']
+                        }
+                    })
+                }
+            } else {
+                res.status(404).json({
+                    error: {
+                        errorMessage: ['Email không tồn tại.']
+                    }
+                })
+            }
+        } catch {
+            res.status(404).json({
+                error: {
+                    errorMessage: ['Interanl Server Error']
+                }
+            })
+        }
+    }
 }

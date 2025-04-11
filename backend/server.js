@@ -3,14 +3,20 @@ const express = require('express');
 const app = express();
 const databaseConnect = require('./config/database');
 const authRouter = require('./routes/authRoute');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 
 const PORT = process.env.PORT || 5000;
 
 app.get('/', (req, res) => {
-    res.send('Hello World!')
+    res.send('This is from backend server')
 })
 
 databaseConnect();
+
+app.use(bodyParser.json());
+
+app.use(cookieParser());
 
 app.use('/api/messenger', authRouter);
 
