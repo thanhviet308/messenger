@@ -9,7 +9,7 @@ const Login = () => {
 
     const navigate = useNavigate();
 
-    const { loading, authenticate, error, successMessage, myInfo } = useSelector(state => state.auth)
+    const { loading, authenticate, error, successMessage, myInfo } = useSelector(state => state.auth);
 
     const dispatch = useDispatch();
 
