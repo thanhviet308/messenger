@@ -1,3 +1,11 @@
 @use './sass/base/reset';
 @use './sass/components/register';
 @use './sass/utils/utils';
+@use './sass/components/messenger';
+@use './sass/layout/grid';
+@use './sass/components/activeFriend';
+@use './sass/components/friends';
+@use './sass/components/rightSide';
+@use './sass/components/message';
+@use './sass/components/messageSend';
+@use './sass/components/friendInfo';
