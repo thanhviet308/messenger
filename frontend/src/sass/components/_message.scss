@@ -150,12 +150,13 @@
         font-size: 12px;
     }
 
+
+    // 👇 Đây là phần style riêng cho ảnh gửi trong tin nhắn
     .message-image {
         background-color: transparent;
         padding: 0;
-        width: 200px;
+        width: 200px; // 👈 tuỳ chọn kích thước bạn muốn
         height: auto;
         border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // Thêm bóng nhẹ cho hình ảnh
     }
 }
