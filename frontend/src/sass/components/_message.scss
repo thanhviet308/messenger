@@ -2,6 +2,8 @@
     height: 100%;
     padding: 10px;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
 
     &::-webkit-scrollbar {
         overflow: hidden;
@@ -27,7 +29,7 @@
     }
 
     .my-message {
-        float: right;
+        align-self: flex-end;
 
         .my-text {
             display: flex;
@@ -76,7 +78,7 @@
     }
 
     .fd-message {
-        float: left;
+        align-self: flex-start;
 
         .fd-text {
             display: flex;
@@ -116,7 +118,7 @@
         height: 32px;
         border-radius: 50%;
         overflow: hidden;
-        margin-right: 10px;
+        margin-right: 0px;
     }
 
     .message-text {
@@ -132,8 +134,13 @@
         color: #727272d9;
         font-size: 12px;
     }
-}
 
-.typing-message {
-    padding: 0px 10px;
+    // 👇 Đây là phần style riêng cho ảnh gửi trong tin nhắn
+    .message-image {
+        background-color: transparent;
+        padding: 0;
+        width: 200px; // 👈 tuỳ chọn kích thước bạn muốn
+        height: auto;
+        border-radius: 10px;
+    }
 }
