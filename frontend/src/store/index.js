@@ -2,9 +2,12 @@ import { configureStore } from '@reduxjs/toolkit';
 import thunk from 'redux-thunk';
 import { authReducer } from './reducers/authReducer';
 import { combineReducers } from 'redux';
+import { messengerReducer } from './reducers/messengerReducer';
 
 const rootReducer = combineReducers({
-    auth: authReducer
+    auth: authReducer,
+    messenger: messengerReducer,
+    // Thêm các reducer khác của bạn vào đây
 })
 
 const store = configureStore({

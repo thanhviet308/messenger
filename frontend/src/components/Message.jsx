@@ -140,13 +140,14 @@ const Message = () => {
             <div className='my-message'>
                 <div className='image-message'>
                     <div className='my-text'>
-                        <p className='message-text'><img src='/image/61685a.jpg' alt='' /></p>
+                        <img className='message-image' src='/image/61685a.jpg' alt='' />
                     </div>
                 </div>
                 <div className='time'>
                     2 Jan 2022
                 </div>
             </div>
+
 
             <div className='fd-message'>
                 <div className='image-message-time'>
