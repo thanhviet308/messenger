@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaEllipsisH, FaEdit, FaSistrix } from "react-icons/fa";
 import ActiveFriend from './ActiveFriend';
 import Friends from './Friends';
@@ -7,6 +7,21 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getFriends } from '../store/actions/messengerAction';
 
 const Messenger = () => {
+
+    const [currentfriend, setCurrentFriend] = useState('');
+
+    const [newMessage, setNewMessage] = useState('');
+
+    const inputHandle = (e) => {
+        setNewMessage(e.target.value);
+    }
+
+    const sendMessage = (e) => {
+        e.preventDefault();
+        console.log(newMessage);
+    }
+
+    console.log('newMessage', newMessage);
 
     const { friends } = useSelector(state => state.messenger);
 
@@ -17,6 +32,12 @@ const Messenger = () => {
     useEffect(() => {
         dispatch(getFriends());
     }, [dispatch]);
+
+    useEffect(() => {
+        if (friends && friends.length > 0) {
+            setCurrentFriend(friends[0]);
+        }
+    }, [friends]);
 
     return (
         <div className='messenger'>
@@ -51,18 +72,32 @@ const Messenger = () => {
                             <ActiveFriend />
                         </div>
                         <div className='friends'>
-
                             {
-                                friends && friends.length > 0 ? friends.map((fd) => <div
-                                    className='hover-friend'>
-                                    <Friends friend={fd} />
-                                </div>) : 'No Friends'
+                                friends && friends.length > 0 ? (
+                                    friends.map((fd) => (
+                                        <div
+                                            onClick={() => setCurrentFriend(fd)}
+                                            className='hover-friend'
+                                            key={fd.id} // nhớ thêm key nếu có id
+                                        >
+                                            <Friends friend={fd} />
+                                        </div>
+                                    ))
+                                ) : (
+                                    'No Friends'
+                                )
                             }
-
                         </div>
                     </div>
                 </div>
-                <RightSide />
+                {
+                    currentfriend ? <RightSide
+                        currentfriend={currentfriend}
+                        inputHandle={inputHandle}
+                        newMessage={newMessage}
+                        sendMessage={sendMessage}
+                    /> : 'Please select a friend to chat with'
+                }
             </div>
         </div>
     )
