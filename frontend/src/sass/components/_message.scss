@@ -6,7 +6,16 @@
     flex-direction: column;
 
     &::-webkit-scrollbar {
-        overflow: hidden;
+        width: 8px; // Thêm kích thước thanh cuộn cho dễ sử dụng
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
     }
 
     .friend_connect {
@@ -50,6 +59,9 @@
             .my {
                 background-color: var(--my-message-bg);
                 color: var(--text-white);
+                border-radius: 10px;
+                padding: 10px;
+                transition: background-color 0.3s ease; // Thêm hiệu ứng mượt mà
             }
 
             .message-text {
@@ -64,7 +76,7 @@
                     border-radius: 5px;
                     overflow: hidden;
                     object-fit: cover;
-
+                    transition: transform 0.3s ease; // Thêm hiệu ứng zoom nhẹ khi hover
                 }
             }
         }
@@ -89,6 +101,9 @@
             .fd {
                 background-color: var(--fd-message-bg);
                 color: var(--text-color);
+                border-radius: 10px;
+                padding: 10px;
+                transition: background-color 0.3s ease;
             }
 
             .message-text {
@@ -102,7 +117,7 @@
                     border-radius: 5px;
                     overflow: hidden;
                     object-fit: cover;
-
+                    transition: transform 0.3s ease;
                 }
             }
         }
@@ -135,12 +150,12 @@
         font-size: 12px;
     }
 
-    // 👇 Đây là phần style riêng cho ảnh gửi trong tin nhắn
     .message-image {
         background-color: transparent;
         padding: 0;
-        width: 200px; // 👈 tuỳ chọn kích thước bạn muốn
+        width: 200px;
         height: auto;
         border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // Thêm bóng nhẹ cho hình ảnh
     }
 }
