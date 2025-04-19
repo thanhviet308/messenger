@@ -14,3 +14,11 @@ export const getFriends = () => async (dispatch) => {
         console.error(error.response.data);
     }
 }
+export const messageSend = (data) => async (dispatch) => {
+    try {
+        const respose = await axios.post('/api/messenger/send-message', data);
+        console.log(respose.data);
+    } catch (error) {
+        console.error(error.response.data);
+    }
+}
