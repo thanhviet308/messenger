@@ -44,3 +44,17 @@ export const getMessage = (id) => {
         }
     }
 }
+
+export const ImageMessageSend = (data) => async (dispatch) => {
+    try {
+        const response = await axios.post('/api/messenger/image-message-send', data);
+        dispatch({
+            type: MESSAGE_SEND_SUCCESS,
+            payload: {
+                message: response.data.message
+            }
+        })
+    } catch (error) {
+        console.error(error.response.data);
+    }
+}

@@ -155,8 +155,9 @@
     .message-image {
         background-color: transparent;
         padding: 0;
-        width: 200px; // 👈 tuỳ chọn kích thước bạn muốn
-        height: auto;
+        width: 250px; // 👈 tuỳ chọn kích thước bạn muốn
+        height: 350px;
         border-radius: 10px;
+        margin-right: 0px;
     }
 }
