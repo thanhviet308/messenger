@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { FaEllipsisH, FaEdit, FaSistrix } from "react-icons/fa";
 import ActiveFriend from './ActiveFriend';
 import Friends from './Friends';
 import RightSide from './RightSide';
 import { useDispatch, useSelector } from 'react-redux';
-import { getFriends, messageSend } from '../store/actions/messengerAction';
+import { getFriends, messageSend, getMessage } from '../store/actions/messengerAction';
 
 const Messenger = () => {
+
+    const scrollRef = useRef();
 
     const [currentfriend, setCurrentFriend] = useState('');
 
@@ -26,7 +28,7 @@ const Messenger = () => {
         dispatch(messageSend(data));
     }
 
-    const { friends } = useSelector(state => state.messenger);
+    const { friends, message } = useSelector(state => state.messenger);
 
     const { myInfo } = useSelector(state => state.auth);
 
@@ -41,6 +43,14 @@ const Messenger = () => {
             setCurrentFriend(friends[0]);
         }
     }, [friends]);
+
+    useEffect(() => {
+        dispatch(getMessage(currentfriend._id));
+    }, [currentfriend?._id]);
+
+    useEffect(() => {
+        scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [message]);
 
     return (
         <div className='messenger'>
@@ -90,6 +100,8 @@ const Messenger = () => {
                         inputHandle={inputHandle}
                         newMessage={newMessage}
                         sendMessage={sendMessage}
+                        message={message}
+                        scrollRef={scrollRef}
                     /> : 'Please select a friend to chat with'
                 }
             </div>

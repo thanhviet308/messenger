@@ -14,7 +14,7 @@ const messageSchema = new Schema({
         required: true
     },
     message: {
-        test: {
+        text: {
             type: String,
             default: ''
         },

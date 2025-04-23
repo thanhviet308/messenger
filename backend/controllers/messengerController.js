@@ -40,7 +40,7 @@ module.exports.messageUploadDB = async (req, res) => {
         });
         res.status(201).json({
             success: true,
-            message: 'Message sent successfully'
+            message: insertMessage
         });
     } catch (errer) {
         res.status(500).json({
@@ -50,3 +50,24 @@ module.exports.messageUploadDB = async (req, res) => {
         });
     }
 }
+
+module.exports.messageGet = async (req, res) => {
+    const myId = req.myId;
+    const fdId = req.params.id;
+
+    try {
+        let getAllMessage = await messageModel.find({})
+        getAllMessage = getAllMessage.filter(m => m.senderId === myId && m.reseverId === fdId || m.senderId === fdId && m.reseverId === myId);
+        console.log(getAllMessage);
+        res.status(200).json({
+            success: true,
+            message: getAllMessage
+        })
+    } catch (errer) {
+        res.status(500).json({
+            error: {
+                errorMessage: ['Internal Server Error']
+            }
+        });
+    }
+} 

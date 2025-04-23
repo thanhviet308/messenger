@@ -6,8 +6,6 @@ import reportWebVitals from './reportWebVitals';
 import './main.scss'
 import { Provider } from 'react-redux';
 import store from './store/index.js';
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
