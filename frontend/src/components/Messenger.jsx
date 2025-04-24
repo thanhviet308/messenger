@@ -5,14 +5,57 @@ import Friends from './Friends';
 import RightSide from './RightSide';
 import { useDispatch, useSelector } from 'react-redux';
 import { getFriends, messageSend, getMessage, ImageMessageSend } from '../store/actions/messengerAction';
+import { io } from 'socket.io-client';
 
 const Messenger = () => {
 
     const scrollRef = useRef();
 
+    const socket = useRef();
+
+    const { friends, message } = useSelector(state => state.messenger);
+
+    const { myInfo } = useSelector(state => state.auth);
+
     const [currentfriend, setCurrentFriend] = useState('');
 
     const [newMessage, setNewMessage] = useState('');
+
+    const [socketMessage, setSocketMessage] = useState('');
+
+    const [activeUser, setActiveUser] = useState([]);
+
+    useEffect(() => {
+        socket.current = io('ws://localhost:8000');
+        socket.current.on('getMessage', (data) => {
+            setSocketMessage(data);
+        })
+    }, []);
+
+    useEffect(() => {
+        if (socketMessage && currentfriend) {
+            if (socketMessage.senderId === currentfriend._id && socketMessage.reseverId === myInfo.id) {
+                dispatch({
+                    type: 'SOCKET_MESSAGE',
+                    payload: {
+                        message: socketMessage
+                    }
+                })
+            }
+        }
+    }, [socketMessage]);
+
+    useEffect(() => {
+        socket.current.emit('addUser', myInfo.id, myInfo);
+    }, []);
+
+    useEffect(() => {
+        socket.current.on('getUser', (users) => {
+            console.log(users);
+            const filterUser = users.filter(u => u.userId !== myInfo.id);
+            setActiveUser(filterUser);
+        });
+    }, []);
 
     const inputHandle = (e) => {
         setNewMessage(e.target.value);
@@ -25,12 +68,19 @@ const Messenger = () => {
             reseverId: currentfriend._id,
             message: newMessage ? newMessage : '❤'
         }
+        socket.current.emit('sendMessage', {
+            senderId: myInfo.id,
+            senderName: myInfo.userName,
+            reseverId: currentfriend._id,
+            time: new Date(),
+            message: {
+                text: newMessage ? newMessage : '❤',
+                image: ''
+            }
+        })
         dispatch(messageSend(data));
+        setNewMessage('');
     }
-
-    const { friends, message } = useSelector(state => state.messenger);
-
-    const { myInfo } = useSelector(state => state.auth);
 
     const dispatch = useDispatch();
 
@@ -99,7 +149,14 @@ const Messenger = () => {
                             </div>
                         </div>
                         <div className='active-friends'>
-                            <ActiveFriend />
+                            {
+                                activeUser && activeUser.length > 0 ? activeUser.map(u =>
+                                    <ActiveFriend
+                                        user={u}
+                                        setCurrentFriend={setCurrentFriend}
+                                    />) : ''
+                            }
+
                         </div>
                         <div className='friends'>
                             {
@@ -121,6 +178,7 @@ const Messenger = () => {
                         scrollRef={scrollRef}
                         emojiSend={emojiSend}
                         ImageSend={ImageSend}
+                        activeUser={activeUser}
                     /> : 'Please select a friend to chat with'
                 }
             </div>
