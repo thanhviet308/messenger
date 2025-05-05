@@ -4,7 +4,7 @@ import ActiveFriend from './ActiveFriend';
 import Friends from './Friends';
 import RightSide from './RightSide';
 import { useDispatch, useSelector } from 'react-redux';
-import { getFriends, messageSend, getMessage, ImageMessageSend } from '../store/actions/messengerAction';
+import { getFriends, messageSend, getMessage, ImageMessageSend, seenMessage, updateMessage } from '../store/actions/messengerAction';
 import { io } from 'socket.io-client';
 import toast, { Toaster } from 'react-hot-toast';
 import useSound from 'use-sound';
@@ -21,7 +21,7 @@ const Messenger = () => {
 
     const socket = useRef();
 
-    const { friends, message } = useSelector(state => state.messenger);
+    const { friends, message, mesageSendSuccess, message_get_success } = useSelector(state => state.messenger);
 
     const { myInfo } = useSelector(state => state.auth);
 
@@ -37,12 +37,40 @@ const Messenger = () => {
 
     useEffect(() => {
         socket.current = io('ws://localhost:8000');
+
         socket.current.on('getMessage', (data) => {
             setSocketMessage(data);
-        })
+        });
+
         socket.current.on('typingMessageGet', (data) => {
             setTypingMessage(data);
+        });
+
+        socket.current.on('msgSeenResponse', msg => {
+            dispatch({
+                type: 'SEEN_MESSAGE',
+                payload: {
+                    msgInfo: msg
+                }
+            })
+        });
+
+        socket.current.on('msgDelivaredResponse', msg => {
+            dispatch({
+                type: 'DELIVARED_MESSAGE',
+                payload: {
+                    msgInfo: msg
+                }
+            })
+        });
+
+        socket.current.on('seenSuccess', data => {
+            dispatch({
+                type: 'SEEN_ALL',
+                payload: data
+            })
         })
+
     }, []);
 
     useEffect(() => {
@@ -52,6 +80,15 @@ const Messenger = () => {
                     type: 'SOCKET_MESSAGE',
                     payload: {
                         message: socketMessage
+                    }
+                })
+                dispatch(seenMessage(socketMessage))
+                socket.current.emit('messageSeen', socketMessage);
+                dispatch({
+                    type: 'UPDATE_FRIEND_MESSAGE',
+                    payload: {
+                        msgInfo: socketMessage,
+                        status: 'seen'
                     }
                 })
             }
@@ -64,7 +101,6 @@ const Messenger = () => {
 
     useEffect(() => {
         socket.current.on('getUser', (users) => {
-            console.log(users);
             const filterUser = users.filter(u => u.userId !== myInfo.id);
             setActiveUser(filterUser);
         });
@@ -75,6 +111,15 @@ const Messenger = () => {
             socketMessage.reseverId === myInfo.id) {
             notificationSPlay();
             toast.success(`${socketMessage.senderName} sent you a message`);
+            dispatch(updateMessage(socketMessage));
+            socket.current.emit('delivaredMessage', socketMessage);
+            dispatch({
+                type: 'UPDATE_FRIEND_MESSAGE',
+                payload: {
+                    msgInfo: socketMessage,
+                    status: 'delivared'
+                }
+            })
         }
     }, [socketMessage]);
 
@@ -97,17 +142,6 @@ const Messenger = () => {
             message: newMessage ? newMessage : '❤'
         }
 
-        socket.current.emit('sendMessage', {
-            senderId: myInfo.id,
-            senderName: myInfo.userName,
-            reseverId: currentfriend._id,
-            time: new Date(),
-            message: {
-                text: newMessage ? newMessage : '❤',
-                image: ''
-            }
-        })
-
         socket.current.emit('typingMessage', {
             senderId: myInfo.id,
             reseverId: currentfriend._id,
@@ -118,6 +152,21 @@ const Messenger = () => {
         setNewMessage('');
     }
 
+    useEffect(() => {
+        if (mesageSendSuccess) {
+            socket.current.emit('sendMessage', message[message.length - 1]);
+            dispatch({
+                type: 'UPDATE_FRIEND_MESSAGE',
+                payload: {
+                    msgInfo: message[message.length - 1]
+                }
+            })
+            dispatch({
+                type: 'MESSAGE_SEND_SUCCESS_CLEAR'
+            })
+        }
+    }, [mesageSendSuccess]);
+
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -125,14 +174,35 @@ const Messenger = () => {
     }, [dispatch]);
 
     useEffect(() => {
-        if (friends && friends.length > 0) {
-            setCurrentFriend(friends[0]);
+        if (!currentfriend && friends && friends.length > 0) {
+            setCurrentFriend(friends[0].fndInfo);
         }
     }, [friends]);
 
     useEffect(() => {
         dispatch(getMessage(currentfriend._id));
+        if (friends.length > 0) {
+        }
     }, [currentfriend?._id]);
+
+    useEffect(() => {
+        if (message.length > 0) {
+            if (message[message.length - 1].senderId !== myInfo.id && message[message.length - 1].status !== 'seen') {
+                dispatch({
+                    type: 'UPDATE',
+                    payload: {
+                        id: currentfriend._id
+                    }
+                })
+                socket.current.emit('seen', { senderId: currentfriend._id, reseverId: myInfo.id })
+                dispatch(seenMessage({ _id: message[message.length - 1]._id }))
+            }
+        }
+        dispatch({
+            type: 'MESSAGE_GET_SUCCESS_CLEAR'
+        })
+
+    }, [message_get_success]);
 
     useEffect(() => {
         scrollRef.current?.scrollIntoView({ behavior: 'smooth' });

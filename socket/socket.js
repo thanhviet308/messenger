@@ -34,16 +34,28 @@ io.on('connection', (socket) => {
     socket.on('sendMessage', (data) => {
         const user = findFriend(data.reseverId);
         if (user !== undefined) {
-            socket.to(user.socketId).emit('getMessage', {
-                senderId: data.senderId,
-                senderName: data.senderName,
-                reseverId: data.reseverId,
-                createAt: data.time,
-                message: {
-                    text: data.message.text,
-                    image: data.message.image
-                }
-            })
+            socket.to(user.socketId).emit('getMessage', data)
+        }
+    })
+
+    socket.on('messageSeen', msg => {
+        const user = findFriend(msg.senderId);
+        if (user !== undefined) {
+            socket.to(user.socketId).emit('msgSeenResponse', msg)
+        }
+    })
+
+    socket.on('delivaredMessage', msg => {
+        const user = findFriend(msg.senderId);
+        if (user !== undefined) {
+            socket.to(user.socketId).emit('msgDelivaredResponse', msg)
+        }
+    })
+
+    socket.on('seen', data => {
+        const user = findFriend(data.senderId);
+        if (user !== undefined) {
+            socket.to(user.socketId).emit('seenSuccess', data)
         }
     })
 

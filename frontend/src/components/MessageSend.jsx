@@ -41,12 +41,12 @@ const MessageSend = ({ inputHandle, newMessage, sendMessage, emojiSend, ImageSen
             <div className='message-type'>
                 <input type="text" name='message' onChange={inputHandle} id='message' placeholder='Aa' className='form-control' value={newMessage} />
                 <div className='file hover-gift'>
-                    <label htmlFor='emoji'> <FaPaperPlane /> </label>
+                    <label htmlFor='emoji'> ❤ </label>
                 </div>
             </div>
 
             <div onClick={sendMessage} className='file'>
-                ❤
+                <FaPaperPlane />
             </div>
 
             <div className='emoji-section'>
