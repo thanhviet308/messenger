@@ -96,6 +96,24 @@ const Messenger = () => {
     }, [socketMessage]);
 
     useEffect(() => {
+        // Kiểm tra xem tin nhắn có status là 'seen' hay không
+        if (message.length > 0) {
+            const lastMessage = message[message.length - 1]; // Lấy tin nhắn cuối cùng
+            if (lastMessage.status === 'seen') {
+                // Cập nhật giao diện ngay khi tin nhắn đã được xem
+                dispatch({
+                    type: 'UPDATE_FRIEND_MESSAGE',
+                    payload: {
+                        msgInfo: lastMessage,
+                        status: 'seen'
+                    }
+                });
+            }
+        }
+    }, [message]); // Dependency là message để theo dõi khi message thay đổi
+
+
+    useEffect(() => {
         socket.current.emit('addUser', myInfo.id, myInfo);
     }, []);
 
@@ -283,7 +301,7 @@ const Messenger = () => {
                                 <input type="text" placeholder='Search' className='form-control' />
                             </div>
                         </div>
-                        <div className='active-friends'>
+                        {/* <div className='active-friends'>
                             {
                                 activeUser && activeUser.length > 0 ? activeUser.map(u =>
                                     <ActiveFriend
@@ -292,12 +310,13 @@ const Messenger = () => {
                                     />) : ''
                             }
 
-                        </div>
+                        </div> */}
                         <div className='friends'>
                             {
                                 friends && friends.length > 0 ? friends.map((fd) => <div onClick={() => setCurrentFriend(fd.fndInfo)}
                                     className={currentfriend._id === fd.fndInfo._id ? 'hover-friend active' : 'hover-friend'} >
                                     <Friends
+                                        activeUser={activeUser}
                                         myId={myInfo.id}
                                         friend={fd}
                                     />

@@ -45,78 +45,56 @@ export const messengerReducer = (state = messengerState, action) => {
     }
 
     if (type === UPDATE_FRIEND_MESSAGE) {
-        const index = state.friends.findIndex(
-            f => f.fndInfo._id === payload.msgInfo.reseverId ||
-                f.fndInfo._id === payload.msgInfo.senderId
-        );
-
-        if (index !== -1) {
-            const updatedFriends = [...state.friends];
-            updatedFriends[index] = {
-                ...updatedFriends[index],
-                msgInfo: {
-                    ...payload.msgInfo,
-                    status: payload.status
-                }
-            };
-
-            return {
-                ...state,
-                friends: updatedFriends
-            };
-        }
-
-        return state;
+        return {
+            ...state,
+            friends: state.friends.map(friend =>
+                (friend.fndInfo._id === payload.msgInfo.reseverId || friend.fndInfo._id === payload.msgInfo.senderId)
+                    ? {
+                        ...friend,
+                        msgInfo: {
+                            ...payload.msgInfo,
+                            status: payload.status
+                        }
+                    }
+                    : friend
+            )
+        };
     }
+
 
     if (type === SEEN_MESSAGE) {
-        const index = state.friends.findIndex(
-            f => f.fndInfo._id === payload.msgInfo.reseverId ||
-                f.fndInfo._id === payload.msgInfo.senderId
-        );
-
-        if (index !== -1) {
-            const updatedFriends = [...state.friends];
-            updatedFriends[index] = {
-                ...updatedFriends[index],
-                msgInfo: {
-                    ...updatedFriends[index].msgInfo,
-                    status: 'seen'
-                }
-            };
-
-            return {
-                ...state,
-                friends: updatedFriends
-            };
-        }
-
-        return state;
+        return {
+            ...state,
+            friends: state.friends.map(friend =>
+                friend.fndInfo._id === payload.msgInfo.reseverId || friend.fndInfo._id === payload.msgInfo.senderId
+                    ? {
+                        ...friend,
+                        msgInfo: {
+                            ...friend.msgInfo,
+                            status: 'seen'
+                        }
+                    }
+                    : friend
+            )
+        };
     }
 
+
     if (type === DELIVARED_MESSAGE) {
-        const index = state.friends.findIndex(
-            f => f.fndInfo._id === payload.msgInfo.reseverId ||
-                f.fndInfo._id === payload.msgInfo.senderId
-        );
-
-        if (index !== -1) {
-            const updatedFriends = [...state.friends];
-            updatedFriends[index] = {
-                ...updatedFriends[index],
-                msgInfo: {
-                    ...updatedFriends[index].msgInfo,
-                    status: 'delivared'
-                }
-            };
-
-            return {
-                ...state,
-                friends: updatedFriends
-            };
-        }
-
-        return state;
+        return {
+            ...state,
+            friends: state.friends.map(friend =>
+                friend.fndInfo._id === payload.msgInfo.reseverId || friend.fndInfo._id === payload.msgInfo.senderId
+                    ? {
+                        ...friend,
+                        msgInfo: {
+                            ...friend.msgInfo,
+                            status: 'delivered'
+                        }
+                    }
+                    : friend
+            )
+        };
     }
 
 
@@ -130,19 +108,20 @@ export const messengerReducer = (state = messengerState, action) => {
     if (type === UPDATE) {
         return {
             ...state,
-            friends: state.friends.map(friend => {
-                if (friend.fndInfo._id === payload.id) {
-                    return {
+            friends: state.friends.map(friend =>
+                friend.fndInfo._id === payload.id
+                    ? {
                         ...friend,
-                        msgInfo: friend.msgInfo
-                            ? { ...friend.msgInfo, status: 'seen' }
-                            : friend.msgInfo
-                    };
-                }
-                return friend;
-            })
+                        msgInfo: friend.msgInfo ? {
+                            ...friend.msgInfo,
+                            status: 'seen'
+                        } : undefined
+                    }
+                    : friend
+            )
         };
     }
+
 
     if (type === MESSAGE_GET_SUCCESS_CLEAR) {
         return {
@@ -151,7 +130,7 @@ export const messengerReducer = (state = messengerState, action) => {
         }
     }
 
-    if (type === 'SEEN_ALL') {
+    if (type === SEEN_ALL) {
         return {
             ...state,
             friends: state.friends.map(friend =>

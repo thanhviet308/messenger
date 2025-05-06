@@ -4,6 +4,8 @@ import Register from "./components/Register";
 import Messenger from "./components/Messenger";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ProtectRoute from "./components/ProtectRoute";
+
 
 function App() {
   return (
@@ -22,7 +24,7 @@ function App() {
         <Routes>
           <Route path="/messenger/login" element={<Login />} />
           <Route path="/messenger/register" element={<Register />} />
-          <Route path="/" element={<Messenger />} />
+          <Route path="/" element={<ProtectRoute> <Messenger /> </ProtectRoute>} />
         </Routes>
       </BrowserRouter>
     </div>
