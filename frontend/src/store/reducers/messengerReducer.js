@@ -9,7 +9,8 @@ const messengerState = {
     friends: [],
     message: [],
     mesageSendSuccess: false,
-    message_get_success: false
+    message_get_success: false,
+    themeMood: ''
 }
 
 export const messengerReducer = (state = messengerState, action) => {
@@ -61,7 +62,6 @@ export const messengerReducer = (state = messengerState, action) => {
         };
     }
 
-
     if (type === SEEN_MESSAGE) {
         return {
             ...state,
@@ -79,7 +79,6 @@ export const messengerReducer = (state = messengerState, action) => {
         };
     }
 
-
     if (type === DELIVARED_MESSAGE) {
         return {
             ...state,
@@ -96,7 +95,6 @@ export const messengerReducer = (state = messengerState, action) => {
             )
         };
     }
-
 
     if (type === MESSAGE_SEND_SUCCESS_CLEAR) {
         return {
@@ -122,7 +120,6 @@ export const messengerReducer = (state = messengerState, action) => {
         };
     }
 
-
     if (type === MESSAGE_GET_SUCCESS_CLEAR) {
         return {
             ...state,
@@ -145,6 +142,13 @@ export const messengerReducer = (state = messengerState, action) => {
                     : friend
             )
         };
+    }
+
+    if (type === 'THEME_GET_SUCCESS' || type === 'THEME_SET_SUCCESS') {
+        return {
+            ...state,
+            themeMood: payload.theme
+        }
     }
 
     return state;

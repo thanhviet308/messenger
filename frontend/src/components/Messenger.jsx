@@ -4,7 +4,7 @@ import ActiveFriend from './ActiveFriend';
 import Friends from './Friends';
 import RightSide from './RightSide';
 import { useDispatch, useSelector } from 'react-redux';
-import { getFriends, messageSend, getMessage, ImageMessageSend, seenMessage, updateMessage } from '../store/actions/messengerAction';
+import { getFriends, messageSend, getMessage, ImageMessageSend, seenMessage, updateMessage, getTheme, themeSet } from '../store/actions/messengerAction';
 import { io } from 'socket.io-client';
 import toast, { Toaster } from 'react-hot-toast';
 import useSound from 'use-sound';
@@ -22,7 +22,7 @@ const Messenger = () => {
 
     const socket = useRef();
 
-    const { friends, message, mesageSendSuccess, message_get_success } = useSelector(state => state.messenger);
+    const { friends, message, mesageSendSuccess, message_get_success, themeMood } = useSelector(state => state.messenger);
 
     const { myInfo } = useSelector(state => state.auth);
 
@@ -264,6 +264,24 @@ const Messenger = () => {
         }
     }
 
+    useEffect(() => {
+        dispatch(getTheme());
+    }, []);
+
+    const search = (e) => {
+
+        const getFriendClass = document.getElementsByClassName('hover-friend');
+        const frienNameClass = document.getElementsByClassName('Fd_name');
+        for (var i = 0; i < getFriendClass.length, i < frienNameClass.length; i++) {
+            let text = frienNameClass[i].innerText.toLowerCase();
+            if (text.indexOf(e.target.value.toLowerCase()) > -1) {
+                getFriendClass[i].style.display = '';
+            } else {
+                getFriendClass[i].style.display = 'none';
+            }
+        }
+    }
+
     const [hide, setHide] = useState(true);
 
     const logout = () => {
@@ -272,7 +290,7 @@ const Messenger = () => {
     }
 
     return (
-        <div className='messenger'>
+        <div className={themeMood === 'dark' ? 'messenger theme' : 'messenger'}>
             <Toaster
                 position={'top-right'}
                 reverseOrder={false}
@@ -308,12 +326,12 @@ const Messenger = () => {
                                     <h3>Dark Mode </h3>
                                     <div className='on'>
                                         <label htmlFor='dark'>ON</label>
-                                        <input type="radio" value="dark" name="theme" id="dark" />
+                                        <input onChange={(e) => dispatch(themeSet(e.target.value))} type="radio" value="dark" name="theme" id="dark" />
                                     </div>
 
                                     <div className='of'>
                                         <label htmlFor='white'>OFF</label>
-                                        <input type="radio" value="white" name="theme" id="white" />
+                                        <input onChange={(e) => dispatch(themeSet(e.target.value))} type="radio" value="white" name="theme" id="white" />
                                     </div>
 
                                     <div onClick={logout} className='logout'>
@@ -326,7 +344,7 @@ const Messenger = () => {
                         <div className='friend-search'>
                             <div className='search'>
                                 <button> <FaSistrix /> </button>
-                                <input type="text" placeholder='Search' className='form-control' />
+                                <input onChange={search} type="text" placeholder='Search' className='form-control' />
                             </div>
                         </div>
                         {/* <div className='active-friends'>
