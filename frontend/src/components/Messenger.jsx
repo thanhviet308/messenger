@@ -97,11 +97,9 @@ const Messenger = () => {
     }, [socketMessage]);
 
     useEffect(() => {
-        // Kiểm tra xem tin nhắn có status là 'seen' hay không
         if (message.length > 0) {
-            const lastMessage = message[message.length - 1]; // Lấy tin nhắn cuối cùng
+            const lastMessage = message[message.length - 1];
             if (lastMessage.status === 'seen') {
-                // Cập nhật giao diện ngay khi tin nhắn đã được xem
                 dispatch({
                     type: 'UPDATE_FRIEND_MESSAGE',
                     payload: {
@@ -111,8 +109,7 @@ const Messenger = () => {
                 });
             }
         }
-    }, [message]); // Dependency là message để theo dõi khi message thay đổi
-
+    }, [message]);
 
     useEffect(() => {
         socket.current.emit('addUser', myInfo.id, myInfo);

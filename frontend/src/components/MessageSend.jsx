@@ -39,7 +39,21 @@ const MessageSend = ({ inputHandle, newMessage, sendMessage, emojiSend, ImageSen
             </div>
 
             <div className='message-type'>
-                <input type="text" name='message' onChange={inputHandle} id='message' placeholder='Aa' className='form-control' value={newMessage} />
+                <input
+                    type="text"
+                    name="message"
+                    id="message"
+                    placeholder="Aa"
+                    className="form-control"
+                    value={newMessage}
+                    onChange={inputHandle}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                            sendMessage(e);
+                        }
+                    }}
+                />
+
                 <div className='file hover-gift'>
                     <label htmlFor='emoji'> ❤ </label>
                 </div>
