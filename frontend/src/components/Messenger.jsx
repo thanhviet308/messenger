@@ -22,7 +22,7 @@ const Messenger = () => {
 
     const socket = useRef();
 
-    const { friends, message, mesageSendSuccess, message_get_success, themeMood } = useSelector(state => state.messenger);
+    const { friends, message, mesageSendSuccess, message_get_success, themeMood, new_user_add } = useSelector(state => state.messenger);
 
     const { myInfo } = useSelector(state => state.auth);
 
@@ -122,7 +122,16 @@ const Messenger = () => {
         socket.current.on('getUser', (users) => {
             const filterUser = users.filter(u => u.userId !== myInfo.id);
             setActiveUser(filterUser);
-        });
+        })
+
+        socket.current.on('new_user_add', data => {
+            dispatch({
+                type: 'NEW_USER_ADD',
+                payload: {
+                    new_user_add: data
+                }
+            })
+        })
     }, []);
 
     useEffect(() => {
@@ -190,7 +199,10 @@ const Messenger = () => {
 
     useEffect(() => {
         dispatch(getFriends());
-    }, [dispatch]);
+        dispatch({
+            type: 'NEW_USER_ADD_CLEAR'
+        })
+    }, [new_user_add]);
 
     useEffect(() => {
         if (!currentfriend && friends && friends.length > 0) {

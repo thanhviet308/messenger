@@ -67,12 +67,14 @@ export const authReducer = (state = authState, action) => {
         }
     }
 
-    if (type === LOGOUT_SUCCESS) {
+    if (type === 'LOGOUT_SUCCESS') {
         return {
             ...state,
-            authenticate: false,
-            successMessage: 'Đăng xuất thành công',
-            myInfo: ''
+            friends: [],
+            message: [],
+            mesageSendSuccess: false,
+            message_get_success: false,
+
         }
     }
 
