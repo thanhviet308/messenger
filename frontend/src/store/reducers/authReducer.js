@@ -1,4 +1,4 @@
-import { REGISTER_FAIL, REGISTER_SUCCESS, SUCCESS_MESSAGE_CLEAR, ERROR_CLEAR, USER_LOGIN_SUCCESS, USSER_LOGIN_FAIL } from "../types/authType";
+import { REGISTER_FAIL, REGISTER_SUCCESS, SUCCESS_MESSAGE_CLEAR, ERROR_CLEAR, USER_LOGIN_SUCCESS, USSER_LOGIN_FAIL, LOGOUT_SUCCESS } from "../types/authType";
 import deCodeToken from 'jwt-decode';
 
 const authState = {
@@ -64,6 +64,15 @@ export const authReducer = (state = authState, action) => {
         return {
             ...state,
             error: ''
+        }
+    }
+
+    if (type === LOGOUT_SUCCESS) {
+        return {
+            ...state,
+            authenticate: false,
+            successMessage: 'Đăng xuất thành công',
+            myInfo: ''
         }
     }
 

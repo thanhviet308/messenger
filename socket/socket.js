@@ -24,6 +24,10 @@ const findFriend = (id) => {
     return users.find(u => u.userId === id);
 }
 
+const userLogout = (userId) => {
+    users = users.filter(u => u.userId !== userId)
+}
+
 io.on('connection', (socket) => {
     console.log('Socket connected');
     socket.on('addUser', (userId, userInfo) => {
@@ -70,9 +74,16 @@ io.on('connection', (socket) => {
         }
     })
 
+    socket.on('logout', userId => {
+        console.log(`User disconnected`);
+        userLogout(userId);
+        io.emit('getUser', users);
+    });
+
     socket.on('disconnect', () => {
         console.log('User disconnected');
         userRemove(socket.id);
         io.emit('getUser', users);
     })
+
 })   

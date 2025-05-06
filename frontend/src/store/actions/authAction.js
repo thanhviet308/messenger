@@ -56,3 +56,18 @@ export const userLogin = (data) => {
         }
     }
 }
+
+
+export const userLogout = () => async (dispath) => {
+    try {
+        const response = await axios.post('/api/messenger/user-logout');
+        if (response.data.success) {
+            localStorage.removeItem('authToken');
+            dispath({
+                type: 'LOGOUT_SUCCESS'
+            })
+        }
+    } catch {
+
+    }
+}
