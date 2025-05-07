@@ -43,6 +43,13 @@ const Messenger = () => {
             setSocketMessage(data);
         });
 
+        socket.current.on('getMessage', (data) => {
+            dispatch({
+                type: 'SOCKET_MESSAGE_RECEIVED',
+                payload: data
+            });
+        });
+
         socket.current.on('typingMessageGet', (data) => {
             setTypingMessage(data);
         });
@@ -298,6 +305,12 @@ const Messenger = () => {
         socket.current.emit('logout', myInfo.id);
     }
 
+    const sortedFriends = [...friends].sort((a, b) => {
+        const aTime = new Date(a.msgInfo?.createdAt || a.fndInfo.createdAt);
+        const bTime = new Date(b.msgInfo?.createdAt || b.fndInfo.createdAt);
+        return bTime - aTime;
+    });
+
     return (
         <div className={themeMood === 'dark' ? 'messenger theme' : 'messenger'}>
             <Toaster
@@ -368,14 +381,21 @@ const Messenger = () => {
                         </div> */}
                         <div className='friends'>
                             {
-                                friends && friends.length > 0 ? friends.map((fd) => <div onClick={() => setCurrentFriend(fd.fndInfo)}
-                                    className={currentfriend._id === fd.fndInfo._id ? 'hover-friend active' : 'hover-friend'} >
-                                    <Friends
-                                        activeUser={activeUser}
-                                        myId={myInfo.id}
-                                        friend={fd}
-                                    />
-                                </div>) : 'No friends found'
+                                sortedFriends && sortedFriends.length > 0
+                                    ? sortedFriends.map((fd) => (
+                                        <div
+                                            key={fd.fndInfo._id}
+                                            onClick={() => setCurrentFriend(fd.fndInfo)}
+                                            className={currentfriend._id === fd.fndInfo._id ? 'hover-friend active' : 'hover-friend'}
+                                        >
+                                            <Friends
+                                                activeUser={activeUser}
+                                                myId={myInfo.id}
+                                                friend={fd}
+                                            />
+                                        </div>
+                                    ))
+                                    : 'No friends found'
                             }
                         </div>
                     </div>

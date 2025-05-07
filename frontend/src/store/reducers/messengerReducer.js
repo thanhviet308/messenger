@@ -2,7 +2,7 @@ import {
     FRIEND_GET_SUCCESS, MESSAGE_GET_SUCCESS, MESSAGE_SEND_SUCCESS,
     SOCKET_MESSAGE, UPDATE_FRIEND_MESSAGE, MESSAGE_SEND_SUCCESS_CLEAR,
     SEEN_MESSAGE, DELIVARED_MESSAGE, UPDATE, MESSAGE_GET_SUCCESS_CLEAR,
-    SEEN_ALL
+    SEEN_ALL, SOCKET_MESSAGE_RECEIVED
 } from "../types/messengerType";
 
 const messengerState = {
@@ -164,6 +164,38 @@ export const messengerReducer = (state = messengerState, action) => {
             ...state,
             new_user_add: ''
         }
+    }
+
+    if (type === SOCKET_MESSAGE_RECEIVED) {
+        const updatedFriends = state.friends.map(f => {
+            if (f.fndInfo._id === action.payload.senderId) {
+                return {
+                    ...f,
+                    msgInfo: {
+                        senderId: action.payload.senderId,
+                        message: {
+                            text: action.payload.message,
+                        },
+                        createdAt: new Date(),
+                        status: 'delivared'
+                    }
+                };
+            }
+            return f;
+        });
+
+        // Đưa bạn đó lên đầu danh sách
+        updatedFriends.sort((a, b) => {
+            const aTime = new Date(a.msgInfo?.createdAt || a.fndInfo.createdAt);
+            const bTime = new Date(b.msgInfo?.createdAt || b.fndInfo.createdAt);
+            return bTime - aTime;
+        });
+
+        return {
+            ...state,
+            friends: updatedFriends
+        };
+
     }
 
     return state;

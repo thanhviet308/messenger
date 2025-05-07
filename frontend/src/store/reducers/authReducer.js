@@ -67,13 +67,12 @@ export const authReducer = (state = authState, action) => {
         }
     }
 
-    if (type === 'LOGOUT_SUCCESS') {
+    if (type === LOGOUT_SUCCESS) {
         return {
             ...state,
-            friends: [],
-            message: [],
-            mesageSendSuccess: false,
-            message_get_success: false,
+            authenticate: false,
+            myInfo: '',
+            successMessage: 'Logout Successfull',
 
         }
     }

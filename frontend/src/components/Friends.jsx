@@ -29,8 +29,15 @@ const Friends = (props) => {
                         }
 
                         {
-                            msgInfo && msgInfo.message.text ? <span className={msgInfo?.senderId !== myId && msgInfo?.status !== undefined && msgInfo.status !== 'seen' ? 'unseen_message ' : ''}>{msgInfo.message.text.slice(0, 10)}</span> : msgInfo && msgInfo.message.image ? <span>Đã gửi một hình ảnh </span> : <span>Đã kết nối với bạn </span>
+                            msgInfo && msgInfo.message && typeof msgInfo.message.text === 'string'
+                                ? <span className={msgInfo?.senderId !== myId && msgInfo?.status !== undefined && msgInfo.status !== 'seen' ? 'unseen_message ' : ''}>
+                                    {msgInfo.message.text.slice(0, 10)}
+                                </span>
+                                : msgInfo && msgInfo.message.image
+                                    ? <span>Đã gửi một hình ảnh </span>
+                                    : <span>Đã kết nối với bạn </span>
                         }
+
                         <span> · {msgInfo ? moment(msgInfo.createdAt).format('HH:mm') : moment(fndInfo.createdAt).format('HH:mm')}</span>
                     </div>
 
