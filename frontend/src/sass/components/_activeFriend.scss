@@ -1,52 +1,59 @@
 .active-friends {
-    .active-friend {
-        overflow: hidden;
+    display: flex; /* Hiển thị các phần tử theo hàng ngang */
+    flex-wrap: wrap; /* Cho phép xuống dòng khi không đủ không gian */
+    gap: 10px; /* Khoảng cách giữa các phần tử */
+}
 
-        .image-active-icon {
-            overflow-x: auto; // Cho phép cuộn qua các hình ảnh khi cần thiết
-            display: flex;
+.active-friend {
+    flex: 0 0 auto; /* Đảm bảo mỗi phần tử không co dãn và có kích thước cố định */
+    overflow: hidden; /* Ẩn phần thừa nếu có */
+}
 
-            // Thanh scrollbar mượt mà hơn và trong suốt
-            &::-webkit-scrollbar {
-                height: 8px; // Chiều cao nhỏ cho scrollbar
-                width: 8px; // Chiều rộng nhỏ cho scrollbar
-            }
+.image-active-icon {
+    display: flex;
+    overflow-x: auto; /* Cho phép cuộn qua các hình ảnh khi cần thiết */
+    scroll-behavior: smooth; /* Thanh cuộn mượt mà */
+    gap: 5px; /* Khoảng cách giữa các hình ảnh */
+    
+    /* Các thanh cuộn */
+    &::-webkit-scrollbar {
+        height: 8px; /* Chiều cao nhỏ cho scrollbar */
+        width: 8px; /* Chiều rộng nhỏ cho scrollbar */
+    }
 
-            &::-webkit-scrollbar-thumb {
-                background: rgba(0, 0, 0, 0.3);
-                border-radius: 10px;
-            }
+    &::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 10px;
+    }
 
-            &::-webkit-scrollbar-thumb:hover {
-                background: rgba(0, 0, 0, 0.5);
-            }
+    &::-webkit-scrollbar-thumb:hover {
+        background: rgba(0, 0, 0, 0.5);
+    }
 
-            // Ẩn scrollbar khi không cần thiết
-            &::-webkit-scrollbar-track {
-                background: transparent;
-            }
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    
+    .image {
+        position: relative;
+        display: inline-block; /* Hiển thị theo hàng ngang */
+        margin-right: 5px; /* Khoảng cách giữa các hình ảnh */
+        
+        img {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover; /* Đảm bảo hình ảnh không bị biến dạng */
+        }
 
-            .image {
-                margin: 5px;
-                position: relative;
-
-                img {
-                    width: 38px;
-                    height: 38px;
-                    border-radius: 50%;
-                    object-fit: cover;
-                }
-
-                .active-icon {
-                    position: absolute;
-                    bottom: 3px;
-                    right: 3px;
-                    width: 10px;
-                    height: 10px;
-                    border-radius: 50%;
-                    background-color: rgb(27, 223, 53);
-                }
-            }
+        .active-icon {
+            position: absolute;
+            bottom: 3px;
+            right: 3px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: rgb(27, 223, 53);
         }
     }
 }

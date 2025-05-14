@@ -260,16 +260,16 @@ const Messenger = () => {
             const imagename = e.target.files[0].name
             const newImageName = Date.now() + imagename;
 
-            socket.current.emit('sendMessage', {
-                senderId: myInfo.id,
-                senderName: myInfo.userName,
-                reseverId: currentfriend._id,
-                time: new Date(),
-                message: {
-                    text: '',
-                    image: newImageName
-                }
-            })
+            // socket.current.emit('sendMessage', {
+            //     senderId: myInfo.id,
+            //     senderName: myInfo.userName,
+            //     reseverId: currentfriend._id,
+            //     time: new Date(),
+            //     message: {
+            //         text: '',
+            //         image: newImageName
+            //     }
+            // })
 
             const formData = new FormData();
             formData.append('senderName', myInfo.userName);
@@ -369,7 +369,7 @@ const Messenger = () => {
                                 <input onChange={search} type="text" placeholder='Search' className='form-control' />
                             </div>
                         </div>
-                        {/* <div className='active-friends'>
+                        <div className='active-friends'>
                             {
                                 activeUser && activeUser.length > 0 ? activeUser.map(u =>
                                     <ActiveFriend
@@ -378,7 +378,7 @@ const Messenger = () => {
                                     />) : ''
                             }
 
-                        </div> */}
+                        </div>
                         <div className='friends'>
                             {
                                 sortedFriends && sortedFriends.length > 0
